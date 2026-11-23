@@ -1,7 +1,11 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { fetchProducts } from "../api/product";
+
+import {
+  fetchProducts,
+  fetchCategories,
+} from "../api/product";
 
 function useProducts({ limit = 12, skip = 0 } = {}) {
   const [state, setState] = useState({
@@ -13,7 +17,7 @@ function useProducts({ limit = 12, skip = 0 } = {}) {
   useEffect(() => {
     const controller = new AbortController();
 
-    async function loadProducts() {
+    async function loadData() {
       setState((previous) => ({
         ...previous,
         status: "loading",
@@ -21,15 +25,26 @@ function useProducts({ limit = 12, skip = 0 } = {}) {
       }));
 
       try {
-        const data = await fetchProducts({
-          limit,
-          skip,
-          signal: controller.signal,
-        });
+        // Run both API requests at the same time
+        const [productsData, categoriesData] =
+          await Promise.all([
+            fetchProducts({
+              limit,
+              skip,
+              signal: controller.signal,
+            }),
+
+            fetchCategories({
+              signal: controller.signal,
+            }),
+          ]);
 
         setState({
           status: "success",
-          data,
+          data: {
+            ...productsData,
+            categories: categoriesData,
+          },
           error: null,
         });
       } catch (error) {
@@ -48,7 +63,7 @@ function useProducts({ limit = 12, skip = 0 } = {}) {
       }
     }
 
-    loadProducts();
+    loadData();
 
     return () => controller.abort();
   }, [limit, skip]);
