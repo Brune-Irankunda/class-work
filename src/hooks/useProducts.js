@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { fetchProducts } from "../api/products";
+import { fetchProducts } from "../api/product";
 
 function useProducts({ limit = 12, skip = 0 } = {}) {
   const [state, setState] = useState({

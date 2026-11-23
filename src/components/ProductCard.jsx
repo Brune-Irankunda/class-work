@@ -1,39 +1,42 @@
 
+import { Link } from "react-router-dom";
+
 function ProductCard({ product }) {
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+    <Link
+      to={`/products/${product.id}`}
+      className="product-link"
+    >
+      <div className="product-card">
+        <img
+          src={product.thumbnail}
+          alt={product.title}
+          className="product-image"
+        />
 
-      <img
-        src={product.thumbnail}
-        alt={product.title}
-        className="w-full h-48 object-cover"
-      />
+        <div className="product-info">
+          <h2>{product.title}</h2>
 
-      <div className="p-4">
-        <h2 className="text-lg font-bold text-gray-800">
-          {product.title}
-        </h2>
-
-        <p className="text-sm text-gray-500 mt-2">
-          {product.category}
-        </p>
-
-        <div className="flex justify-between items-center mt-4">
-          <p className="text-xl font-bold text-blue-600">
-            ${product.price}
+          <p className="category">
+            {product.category}
           </p>
 
-          <span className="text-sm text-yellow-600">
-            ⭐ {product.rating}
-          </span>
+          <div className="product-bottom">
+            <span className="price">
+              ${product.price}
+            </span>
+
+            <span className="rating">
+               {product.rating}
+            </span>
+          </div>
+
+          <p className="stock">
+            {product.stock} items in stock
+          </p>
         </div>
-
-        <p className="text-sm text-gray-500 mt-2">
-          {product.stock} items in stock
-        </p>
       </div>
-
-    </div>
+    </Link>
   );
 }
 
